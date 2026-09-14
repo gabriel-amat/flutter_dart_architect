@@ -1,0 +1,48 @@
+# Flutter & Dart Architect - Cursor AI Rules (.cursorrules)
+# Architecture: Clean Architecture by Feature + Decoupled Dio + Extension Types + Result/Either
+
+You are an expert Flutter & Dart Software Architect. Always adhere to the following strict architectural rules:
+
+## 1. Directory & Layer Organization
+- Organize code by Feature under `lib/features/{feature}/`:
+  - `data/`: `datasources/`, `models/`, `repositories/`
+  - `domain/`: `entities/`, `repositories/` (interfaces), `usecases/`
+  - `presentation/`: `pages/`, `controllers/`, `widgets/`
+  - `{feature}_routes.dart`
+  - `{feature}_dependencies.dart`
+- Core cross-cutting modules live in `lib/core/` (`network/`, `error/`, `di/`, `navigation/`, `theme/`, `utils/`).
+- Shared UI components live in `lib/shared/`.
+
+## 2. Layer Constraints & Boundaries
+- DOMAIN LAYER:
+  - NEVER import `package:flutter/...` or `package:dio/...` or anything from `data/`.
+  - Entities are pure immutable Dart classes with NO `fromJson` / `toJson`.
+  - Repository contracts are abstract interfaces (`abstract interface class IFeatureRepository`).
+  - UseCases have a single responsibility (`call(...)`) and return `Future<Either<Failure, T>>`.
+- DATA LAYER:
+  - Models MUST be Dart 3.3+ Extension Types: `extension type FeatureModel(FeatureEntity entity) implements FeatureEntity`.
+  - Encapsulate `fromJson` and `toJson` strictly inside the Extension Type model.
+  - DataSources MUST be CONCRETE classes (no abstract interfaces). They receive `IHttpClient`, accept raw primitive parameters/maps, return `HttpResponse<dynamic>`, and NEVER contain `try/catch` or business logic.
+  - Repositories (`implements IFeatureRepository`) catch `HttpNetworkException`, map to `Failure`, deserialize `response.data` using `Model.fromJson(...)`, and return `Either<Failure, Entity>`.
+- PRESENTATION LAYER:
+  - NEVER call DataSources or concrete Repositories directly.
+  - Inject controllers via `locator.get<Controller>()` or execute UseCases.
+  - Represent state as a `sealed class {Feature}State`.
+  - UI consumes state using exhaustive pattern-matching `switch (state)` with NO default branch.
+  - Build UI using small, focused, private `StatelessWidget` classes. Avoid giant build methods.
+  - Use `const` constructors wherever possible.
+
+## 3. Network & Authentication
+- NEVER import `package:dio` inside `features/`. Use `IHttpClient` interface.
+- 401 Refresh Token requests MUST use an isolated `cleanDio` instance (without interceptors) and a `Completer<bool>` concurrency lock to prevent infinite 401 refresh loops.
+
+## 4. Error Handling
+- Use lightweight `Either<Failure, Success>` for functional error handling.
+- Do NOT import `dartz` or `fpdart`. Use the custom sealed class implementation in `core/error/either.dart`.
+- Catch `HttpNetworkException` in repositories; never let low-level network errors bubble to the UI.
+
+## 5. Navigation & Global Helpers
+- Centralize named routes in `AppPages`.
+- Combine feature routes in `CustomRouter.generateRoute`.
+- Use `locator.get<NavigationController>()` for contextless navigation.
+- Use `locator.get<CustomSnack>()` for global snackbars.

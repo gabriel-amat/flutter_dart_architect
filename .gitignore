@@ -27,3 +27,6 @@ local.properties
 **/Generated.xcconfig
 **/flutter_export_environment.sh
 GeneratedPluginRegistrant.*
+
+# Local drafts & personal files (ignored by Git)
+.local/

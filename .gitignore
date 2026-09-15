@@ -1,0 +1,29 @@
+# Flutter/Dart artifacts
+.dart_tool/
+.packages
+build/
+*.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Compiled Native Binaries & SPM
+*.dylib
+*.so
+*.dll
+.build/
+
+# Ephemeral Flutter artifacts
+local.properties
+**/ephemeral/
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+GeneratedPluginRegistrant.*

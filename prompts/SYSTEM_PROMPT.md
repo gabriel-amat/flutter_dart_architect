@@ -49,6 +49,7 @@ Never duplicate class properties between Entity and Model.
 
 ### 6. Presentation Layer & Best Practices
 - Model state hierarchies using `sealed class {Feature}State`.
+- Separate controller and state using `part` / `part of`: `{feature}_controller.dart` (`part '{feature}_state.dart';`) and `{feature}_state.dart` (`part of '{feature}_controller.dart';`).
 - Use exhaustive `switch (state)` pattern matching without `default:` in presentation widgets.
 - Avoid massive `build()` methods; split UI into small private `StatelessWidget` classes.
 - Use `const` constructors aggressively.

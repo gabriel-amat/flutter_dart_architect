@@ -331,13 +331,30 @@ MaterialApp(
      const ProfileError(this.message);
    }
    ```
-2. **Compile-Time Exhaustiveness**: UI builds use `switch (state)` with no wildcard `default:` branch to guarantee all states are handled.
-3. **Widget Composition**: Maximize private widgets (`class _ProfileHeader extends StatelessWidget`) instead of monster build methods or widget-returning functions (`Widget _buildHeader()`).
-4. **Immutability & `const`**: Ensure every widget without mutable state uses `const` constructors to eliminate superfluous element rebuilds.
-5. **Responsive & Mobile-First**:
+2. **Controller & State File Separation (`part` / `part of`)**:
+   Always separate state classes from controller logic using Dart's `part` and `part of` directives:
+   - `{feature}_controller.dart` contains `part '{feature}_state.dart';`
+   - `{feature}_state.dart` contains `part of '{feature}_controller.dart';`
+   This keeps files compact and clean, avoids circular dependencies, and exposes both classes through a single import.
+
+3. **Compile-Time Exhaustiveness**: UI builds use `switch (state)` with no wildcard `default:` branch to guarantee all states are handled.
+4. **Widget Composition**: Maximize private widgets (`class _ProfileHeader extends StatelessWidget`) instead of monster build methods or widget-returning functions (`Widget _buildHeader()`).
+5. **Immutability & `const`**: Ensure every widget without mutable state uses `const` constructors to eliminate superfluous element rebuilds.
+6. **Responsive & Mobile-First**:
    - Baseline: Mobile portrait layout.
    - Web/Desktop: Center content with `ConstrainedBox(constraints: BoxConstraints(maxWidth: 480))` on form and auth screens.
    - Overflow safety: Every form/page wrapped in `SingleChildScrollView` or `ListView` with touch targets $\ge 48\times48\,\text{dp}$.
+
+---
+
+### 3.8. Enterprise Scale: Custom Navigation Stacks & Scoped Lifecycle Containers
+For mission-critical, banking-grade, and enterprise applications:
+1. **Custom Navigation & Flow Coordinators**: Complex multi-step wizards (e.g. transfers, KYC onboarding) must not be coupled to the global linear `Navigator`. Use autonomous `FlowCoordinator` classes that own their private route stack and handle atomic rollback/cancellation.
+2. **Ephemeral Scoped Containers (`ScopedContainer`)**: Avoid leaking sensitive data (account balances, tokens, draft forms) across user sessions or flows. When a flow finishes or a user logs out, the entire child DI scope is disposed, clearing all instances and controller streams from memory.
+3. **Multi-Package Monorepos (Melos)**: Split applications into strict packages (`packages/core/*`, `packages/design_system`, `packages/features/*`) to enforce boundaries at compile time.
+4. **Add-to-App (Hybrid Native + Flutter)**: When embedding Flutter modules into legacy iOS and Android hosts, use `FlutterEngineGroup` (reducing per-engine overhead to ~180KB) and typed contracts via **Pigeon**.
+
+*For complete diagrams and architectural deep-dives across Small, Medium, and Enterprise tiers, see [docs/PROJECT_SCALES.md](./docs/PROJECT_SCALES.md).*
 
 ---
 

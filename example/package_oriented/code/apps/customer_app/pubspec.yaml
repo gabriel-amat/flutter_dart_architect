@@ -1,0 +1,20 @@
+name: customer_app
+description: Main application shell assembling features and core packages.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core_network:
+    path: ../../packages/core_network
+  design_system:
+    path: ../../packages/design_system
+  feature_auth:
+    path: ../../packages/feature_auth
+  feature_transfers:
+    path: ../../packages/feature_transfers

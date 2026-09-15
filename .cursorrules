@@ -28,6 +28,7 @@ You are an expert Flutter & Dart Software Architect. Always adhere to the follow
   - NEVER call DataSources or concrete Repositories directly.
   - Inject controllers via `locator.get<Controller>()` or execute UseCases.
   - Represent state as a `sealed class {Feature}State`.
+  - Separate controller and state files using `part` / `part of`: `{feature}_controller.dart` (`part '{feature}_state.dart';`) and `{feature}_state.dart` (`part of '{feature}_controller.dart';`).
   - UI consumes state using exhaustive pattern-matching `switch (state)` with NO default branch.
   - Build UI using small, focused, private `StatelessWidget` classes. Avoid giant build methods.
   - Use `const` constructors wherever possible.

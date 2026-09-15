@@ -1,0 +1,21 @@
+name: flutter_dart_architect_monorepo
+packages:
+  - "apps/*"
+  - "packages/**"
+
+scripts:
+  bootstrap:
+    run: melos bootstrap
+    description: Link all workspace packages locally.
+
+  analyze:
+    run: melos exec -- flutter analyze .
+    description: Run static analysis across all monorepo packages.
+
+  test:
+    run: melos exec --dir-exists="test" -- "flutter test"
+    description: Run test suites across all packages.
+
+  test:changed:
+    run: melos exec --diff=origin/main --dir-exists="test" -- "flutter test"
+    description: Run tests only for modified packages.

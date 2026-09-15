@@ -117,8 +117,9 @@ The specification is designed to scale gracefully from single-developer MVPs to 
 - **🟢 Small (MVP & Utilities)**: Minimal layer overhead, native `ValueNotifier`, zero boilerplate.
 - **🟡 Medium (Production SaaS / E-commerce)**: Feature-driven Clean Architecture, sealed states, decoupled `IHttpClient`, Extension Types.
 - **🔴 Enterprise (Mission-Critical / Banking-Grade)**:
-  - **Custom Navigation & Flow Coordinators**: Autonomous navigation stacks that isolate complex wizards (e.g. KYC, Transfers) and allow atomic rollback.
-  - **Isolated Scoped Containers (`ScopedContainer`)**: Ephemeral DI lifecycles preventing sensitive state (tokens, account drafts) from leaking across user sessions or flows.
+  - **Cubit with State Pattern**: High-velocity, pure state emissions without event overhead.
+  - **Custom Navigation & Flow Coordinators**: Autonomous navigation stacks that isolate complex wizards (e.g. KYC, Identity Verification) and allow atomic rollback.
+  - **Scoped Dependency Injection (`InjectorBase`)**: Ephemeral DI lifecycles preventing sensitive state from leaking across user sessions or flows, with automatic closure of Cubit states.
   - **Multi-Package Monorepos (Melos)**: Compile-time isolation across autonomous packages (`packages/core/*`, `packages/features/*`).
   - **Add-to-App (Hybrid Native + Flutter)**: High-performance embedding with `FlutterEngineGroup` (~180KB per instance) and type-safe Pigeon contracts.
 
@@ -128,15 +129,18 @@ The specification is designed to scale gracefully from single-developer MVPs to 
 
 ## 📂 Project Structure & Reference Architectures
 
-The repository provides 5 complete, runnable reference architectures under [`example/`](./example/):
+The repository provides **8 complete, runnable reference architectures and test suites** under [`example/`](./example/):
 
-| Tier | Directory | Specification | Focus Patterns |
+| Category / Tier | Directory | Specification | Focus Patterns |
 | :--- | :--- | :--- | :--- |
-| **🟢 Small App** | [`example/small_app/code/`](./example/small_app/code/) | [`project_detail_spec.md`](./example/small_app/project_detail_spec.md) | MVPs, utilities, native `ValueNotifier`, flat clean layout, zero third-party boilerplate. |
-| **🟡 Medium App** | [`example/medium_app/code/`](./example/medium_app/code/) | [`project_detail_spec.md`](./example/medium_app/project_detail_spec.md) | Production SaaS, Clean Architecture by Feature, Extension Types, `IHttpClient`, Anti-Loop 401, `CustomSnack`, `main.dart` bootstrap. |
-| **🔴 Large / Enterprise** | [`example/large_app/code/`](./example/large_app/code/) | [`project_detail_spec.md`](./example/large_app/project_detail_spec.md) | Banking-grade flows, **Flow Coordinators** (autonomous navigation), **Scoped Containers** (ephemeral memory/session disposal). |
+| **🟢 Small App** | [`example/small_app/code/`](./example/small_app/code/) | [`project_detail_spec.md`](./example/small_app/project_detail_spec.md) | MVPs & utilities: feature-first structure, native `ValueNotifier`, zero third-party boilerplate. |
+| **🟡 Medium App** | [`example/medium_app/code/`](./example/medium_app/code/) | [`project_detail_spec.md`](./example/medium_app/project_detail_spec.md) | Production SaaS: Clean Architecture by Feature, Extension Types, `IHttpClient`, Anti-Loop 401, `CustomSnack`, `main.dart` bootstrap. |
+| **🔴 Large / Enterprise** | [`example/large_app/code/`](./example/large_app/code/) | [`project_detail_spec.md`](./example/large_app/project_detail_spec.md) | Mission-critical apps: **`Cubit<State>`** with State Pattern, **Flow Coordinators** (autonomous navigation stacks), and **`InjectorBase`** (ephemeral scoped DI with auto-disposal). |
 | **📦 Package-Oriented** | [`example/package_oriented/code/`](./example/package_oriented/code/) | [`project_detail_spec.md`](./example/package_oriented/project_detail_spec.md) | Multi-package monorepos with **Melos**, compile boundaries across `core`, `design_system`, and autonomous `feature` packages. |
-| **🔌 Add-to-App** | [`example/add_to_app/code/`](./example/add_to_app/code/) | [`project_detail_spec.md`](./example/add_to_app/project_detail_spec.md) | Embedding Flutter into native iOS (Swift) & Android (Kotlin) hosts with **`FlutterEngineGroup`** (~180KB memory) and **Pigeon**. |
+| **🔌 Add-to-App** | [`example/add_to_app/code/`](./example/add_to_app/code/) | [`project_detail_spec.md`](./example/add_to_app/project_detail_spec.md) | Embedding Flutter into native iOS (Swift) & Android (Kotlin) hosts with **`FlutterEngineGroup`** (~180KB memory footprint) and **Pigeon**. |
+| **📱 Method Channel** | [`example/method_channel/code/`](./example/method_channel/code/) | [`project_detail_spec.md`](./example/method_channel/project_detail_spec.md) | Decoupled platform bridge (`ISecurityBridge`), typed domain entities, native Kotlin & Swift handlers, and mock unit testing without a physical device. |
+| **⚡ Dart FFI** | [`example/dart_ffi/code/`](./example/dart_ffi/code/) | [`project_detail_spec.md`](./example/dart_ffi/project_detail_spec.md) | Low-latency in-process C-ABI computing, C99 engine, pure **Swift Package Manager (SPM, zero CocoaPods)** setup, memory Arenas, native Structs, and benchmark UI. |
+| **🧪 Testing Catalog** | [`example/tests/`](./example/tests/) | [`README.md`](./example/tests/README.md) | Complete automated testing suite: 8 test categories (Unit, UseCase with Either, Controller, DataSource, Repository, Widget, Flow Navigation, Golden Tests). |
 
 ---
 
